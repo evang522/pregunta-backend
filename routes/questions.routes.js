@@ -3,16 +3,15 @@
 const express = require('express');
 const router = express.Router();
 const Question = require('../models/questions.models');
-
 //================================== Questions Route ====================>
 
-router.get('/questions', (req,res,next) => {
+router.get('/questions',(req,res,next) => {
   //Todo SORT BY VOTE TOTAL
   // Query UserNAME
   const {userId} = req.query;
   
   Question.find({user: userId})
-    .sort({'votes.score': 1})
+    .sort({'votes.score': -1})
     .then(response => {
       res.status(200).json(response);
     })
@@ -24,7 +23,6 @@ router.get('/questions', (req,res,next) => {
 
 router.post('/questions', (req,res,next) => {
 
-  console.log(req.body);
   const validatorFields = ['title','body'];
   const newPost = {};
   let err;
@@ -111,7 +109,7 @@ router.put('/questions/:id', (req,res,next) => {
 
       return Question.findById(id)
         .then(response => {
-          const voteArr = response.votes.list.find(item => item.user === '5b4aba9258793e04e13315a7');
+          const voteArr = response.votes.list.find(item => item.user === req.user.id);
           if (voteArr) {
             const err = new Error();
             err.status = 400;
@@ -125,7 +123,7 @@ router.put('/questions/:id', (req,res,next) => {
             {
               'votes.list':
               {
-                user:'5b4aba9258793e04e13315a7',
+                user:req.user.id,
                 type: req.body.voteType
               }
             }
@@ -142,7 +140,7 @@ router.put('/questions/:id', (req,res,next) => {
 
       return Question.findById(id)
         .then(response => {
-          const voteArr = response.votes.list.find(item => item.user === '5b4aba9258793e04e13315a7');
+          const voteArr = response.votes.list.find(item => item.user === req.user.id);
           if (voteArr) {
             const err = new Error();
             err.status = 400;
@@ -156,7 +154,7 @@ router.put('/questions/:id', (req,res,next) => {
             {
               'votes.list':
               {
-                user:'5b4aba9258793e04e13315a7',
+                user:req.user.id,
                 type: req.body.voteType
               }
             }
@@ -177,7 +175,7 @@ router.put('/questions/:id', (req,res,next) => {
   if (req.body.requestType === 'removeVote') {
     return Question.findById(id)
       .then(response => {
-        const vote = response.votes.list.find(item => item.user === '5b4aba9258793e04e13315a7');
+        const vote = response.votes.list.find(item => item.user === req.user.id);
         if (!vote) {
           const err = new Error();
           err.status = 400;
@@ -191,7 +189,7 @@ router.put('/questions/:id', (req,res,next) => {
             {
               'votes.list':
               {
-                user:'5b4aba9258793e04e13315a7'
+                user:req.user.id
               }
             }
           },

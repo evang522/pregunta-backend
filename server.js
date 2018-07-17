@@ -7,6 +7,9 @@ const app = express();
 const {PORT} = require('./config');
 const mongoose = require('mongoose');
 const questionRoute = require('./routes/questions.routes');
+const userRoute = require('./routes/users.routes');
+const authRoute = require('./routes/auth.routes');
+const jwtAuth = require('./utils/jwtAuth');
 
 //================================== Logger Middleware ====================>
 app.use(morgan('common'));
@@ -16,12 +19,16 @@ app.use(express.json());
 
 
 //================================== Routes ====================>
+app.use('/api', authRoute);
+app.use('/api', userRoute);
+
+//Protected Routes
+app.use(jwtAuth);
 app.use('/api', questionRoute);
 
 
 //================================== Error Handler ====================>
 app.use((err,req,res,next) => {
-  console.log(err);
   const error = new Error();
   error.status = err.status || 500;
   error.message = err.message || 'Internal Server Error';
