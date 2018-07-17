@@ -8,9 +8,13 @@ const Question = require('../models/questions.models');
 router.get('/questions',(req,res,next) => {
   //Todo SORT BY VOTE TOTAL
   // Query UserNAME
+  const query = {};
   const {userId} = req.query;
+  if (userId) {
+    query.user = userId;
+  }
   
-  Question.find({user: userId})
+  Question.find(query)
     .sort({'votes.score': -1})
     .then(response => {
       res.status(200).json(response);

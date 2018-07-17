@@ -19,7 +19,11 @@ const QuestionSchema = mongoose.Schema({
       default:0
     }
   },
-  user: mongoose.Schema.Types.ObjectId
+  user: mongoose.Schema.Types.ObjectId,
+  created: {
+    type:Date,
+    default: () => new Date()
+  }
 });
 
 
