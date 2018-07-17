@@ -15,7 +15,8 @@ router.get('/questions', (req,res,next) => {
     .sort({'votes.score': 1})
     .then(response => {
       res.status(200).json(response);
-    });
+    })
+    .catch(next);
 });
 
 //================================== POST Route ====================>
