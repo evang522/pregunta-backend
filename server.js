@@ -17,7 +17,6 @@ app.use(morgan('common'));
 //================================== JSON Parser ====================>
 app.use(express.json());
 
-
 //================================== Routes ====================>
 app.use('/api', authRoute);
 app.use('/api', userRoute);
@@ -29,6 +28,7 @@ app.use('/api', questionRoute);
 
 //================================== Error Handler ====================>
 app.use((err,req,res,next) => {
+  console.log(err);
   const error = new Error();
   error.status = err.status || 500;
   error.message = err.message || 'Internal Server Error';

@@ -5,6 +5,9 @@ const mongoose = require('mongoose');
 
 //================================== Construct User Model ====================>
 
+const FollowingUserSchema = mongoose.Schema({
+  user: mongoose.Schema.Types.ObjectId
+}, {_id:false});
 
 const UserSchema = mongoose.Schema({
   handle: {
@@ -35,7 +38,9 @@ const UserSchema = mongoose.Schema({
   created: {
     type:Date,
     default: () => new Date()
-  }
+  },
+  followers: [FollowingUserSchema],
+  following: [FollowingUserSchema]
 
 });
 
